@@ -1,0 +1,336 @@
+<!DOCTYPE html>  <html>  
+<head>  
+<meta charset="UTF-8">  
+<title>Happy Birthday My Love</title>  <style>  
+  
+body{  
+margin:0;  
+font-family:Arial;  
+text-align:center;  
+overflow:hidden;  
+color:white;  
+background:linear-gradient(135deg,#ff4d6d,#ff758f,#ff8fa3);  
+}  
+  
+/* pages */  
+  
+.page{  
+display:none;  
+height:100vh;  
+justify-content:center;  
+align-items:center;  
+flex-direction:column;  
+padding:20px;  
+}  
+  
+.active{  
+display:flex;  
+}  
+  
+/* button */  
+  
+button{  
+padding:12px 25px;  
+font-size:18px;  
+border:none;  
+border-radius:25px;  
+background:white;  
+color:#ff4d6d;  
+cursor:pointer;  
+margin-top:20px;  
+}  
+  
+button:hover{  
+background:#ffe0e6;  
+}  
+  
+/* glowing title */  
+  
+h1{  
+text-shadow:0 0 10px white,0 0 20px pink;  
+}  
+  
+/* typing */  
+  
+.typing{  
+max-width:320px;  
+font-size:18px;  
+line-height:1.6;  
+}  
+  
+/* cake */  
+  
+.cake{  
+font-size:80px;  
+animation:cakeJump 2s infinite;  
+}  
+  
+@keyframes cakeJump{  
+0%{transform:translateY(0)}  
+50%{transform:translateY(-20px)}  
+100%{transform:translateY(0)}  
+}  
+  
+/* hearts */  
+  
+.heart{  
+position:absolute;  
+font-size:22px;  
+animation:heartFly 6s linear infinite;  
+}  
+  
+@keyframes heartFly{  
+0%{transform:translateY(100vh);}  
+100%{transform:translateY(-10vh);}  
+}  
+  
+/* butterflies */  
+  
+.butterfly{  
+position:absolute;  
+font-size:24px;  
+animation:butterFly 8s linear infinite;  
+}  
+  
+@keyframes butterFly{  
+0%{transform:translateX(-10vw) translateY(40vh);}  
+100%{transform:translateX(110vw) translateY(-20vh);}  
+}  
+  
+/* fireworks */  
+  
+.firework{  
+position:absolute;  
+font-size:28px;  
+animation:boom 1s ease-out forwards;  
+}  
+  
+@keyframes boom{  
+0%{transform:scale(0);}  
+100%{transform:scale(2);opacity:0;}  
+}  
+  
+/* slideshow */  
+  
+.slideshow{  
+position:relative;  
+width:300px;  
+height:340px;  
+padding:15px;  
+background:black;  
+border-radius:20px;  
+box-shadow:0 0 25px pink,0 0 40px red;  
+display:flex;  
+align-items:center;  
+justify-content:center;  
+overflow:hidden;  
+}  
+  
+.slide{  
+position:absolute;  
+width:100%;  
+height:100%;  
+object-fit:cover;  
+opacity:0;  
+transition:opacity 1s;  
+}  
+  
+.activeSlide{  
+opacity:1;  
+}  
+  
+</style>  </head>  <body>  <!-- Background Music -->
+<audio id="bgMusic" autoplay loop>
+<source src="Nenje Nenje.mp3">
+</audio> <!-- PAGE 1 COUNTDOWN -->  <div class="page active" id="p1">  
+<h1 id="count">10</h1>  
+</div>  <!-- PAGE 2 BIRTHDAY -->  <div class="page" id="p2">  <h1>🎉 Happy Birthday zara 🎀</h1>  <div class="cake">🎂</div>  <button onclick="nextPage(3)">Next →</button>
+</id>
+
+</div>  <!-- PAGE 3 TYPING MESSAGE -->  <div class="page" id="p3">  <h1>For You ❤️</h1>  <p id="typing" class="typing"></p>  <button id="nextBtn" onclick="nextPage(4)" style="display:none">Next →</button>
+
+</div>  <!-- PAGE 4 PHOTO SLIDESHOW -->  <div class="page" id="p4">  
+<h1>DO YOU WANT SEE IT ? 🌹</h1>  
+<button onclick="nextPage(5)">Yes</button>  
+<button onclick="moveNo(this)">No</button>  </div>  
+<!-- PAGE 5 PHOTO SLIDESHOW -->  <div class="page" id="p5">  <h1>YOUR Beautiful Memories ❤️</h1>  <div class="slideshow">  <img class="slide activeSlide" src="/IMG_20260306_205241_796.jpg">  
+<img class="slide" src="car 1.png">  
+<img class="slide" src="car 1.png">  
+<img class="slide" src="car 1.png">  
+  </div>  <button onclick="nextPage(6)">Next →</button>
+
+</div>  <!-- PAGE 6 FINAL MESSAGE -->  <div class="page" id="p6">  <h1>My Final Message ❤️</h1>  <p id="typing" class="typing">  No matter where life takes us,
+I promise I will always
+respect you and care for you forever.
+You are the most special person in my life.
+once again HAPPY BIRTHDAY TO YOU 
+DEEPA ❤️
+
+</p>  </div>  <script>  
+/* MUSIC AUTO PLAY FIX */
+
+let music = document.getElementById("bgMusic");
+
+window.addEventListener("load", () => {
+    let playPromise = music.play();
+
+    if (playPromise !== undefined) {
+        playPromise.catch(() => {
+            document.body.addEventListener("click", () => {
+                music.play();
+            }, { once: true });
+        });
+    }
+});
+  
+/* page switch */  
+  
+function nextPage(n){  
+  
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));  
+  
+document.getElementById("p"+n).classList.add("active");  
+  
+if(n===3){  
+startTyping();  
+}  
+  
+}  
+  
+/* countdown */  
+  
+let time=10;  
+  
+let timer=setInterval(()=>{  
+  
+time--;  
+  
+document.getElementById("count").innerText=time;  
+  
+if(time<=0){  
+clearInterval(timer);  
+nextPage(2);  
+}  
+  
+},1000);  
+  
+/* typing animation */  
+  
+let msg="You are the most beautiful part of my life. Your smile makes my world brighter. I am lucky to have you in my life.I am always with you❤️";  
+  
+let i=0;  
+  
+function startTyping(){  
+  
+document.getElementById("typing").innerHTML="";  
+i=0;  
+  
+function type(){  
+  
+if(i<msg.length){  
+  
+document.getElementById("typing").innerHTML+=msg.charAt(i);  
+  
+i++;  
+  
+setTimeout(type,100);  
+  
+}  
+  
+else{  
+  
+document.getElementById("nextBtn").style.display="block";  
+  
+}  
+  
+}  
+  
+type();  
+  
+}  
+/* moving NO button */  
+function moveNo(btn){  
+btn.style.position="absolute";  
+btn.style.left=Math.random()*80+"vw";  
+btn.style.top=Math.random()*80+"vh";  
+}  
+  
+/* hearts */  
+  
+setInterval(()=>{  
+  
+let h=document.createElement("div");  
+  
+h.className="heart";  
+  
+h.innerHTML="🤍✨";  
+  
+h.style.left=Math.random()*80+"vw";  
+  
+document.body.appendChild(h);  
+  
+setTimeout(()=>h.remove(),6000);  
+  
+},500);  
+  
+/* butterflies */  
+  
+setInterval(()=>{  
+  
+let b=document.createElement("div");  
+  
+b.className="butterfly";  
+  
+b.innerHTML="🦋";  
+  
+b.style.top=Math.random()*80+"vh";  
+  
+document.body.appendChild(b);  
+  
+setTimeout(()=>b.remove(),6000);  
+  
+},2000);  
+  
+/* fireworks */  
+  
+setInterval(()=>{  
+  
+let f=document.createElement("div");  
+  
+f.className="firework";  
+  
+f.innerHTML="🎆";  
+  
+f.style.left=Math.random()*100+"vw";  
+  
+f.style.top=Math.random()*80+"vh";  
+  
+document.body.appendChild(f);  
+  
+setTimeout(()=>f.remove(),1000);  
+  
+},700);  
+  
+/* slideshow */  
+  
+let slides=document.querySelectorAll(".slide");  
+  
+let index=0;  
+  
+setInterval(()=>{  
+  
+slides[index].classList.remove("activeSlide");  
+  
+index++;  
+  
+if(index>=slides.length){  
+index=0;  
+}  
+  
+slides[index].classList.add("activeSlide");  
+  
+},3000);  
+  
+</script> 
+ </body>  
+</html>
