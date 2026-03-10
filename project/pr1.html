@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CertiAI - Secure Certificate Platform</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Segoe UI;
+background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1a1a2e);
+background-size:400% 400%;
+animation:gradient 12s ease infinite;
+color:white;
+}
+
+@keyframes gradient{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+section{
+padding:60px;
+display:none;
+}
+
+.active{
+display:block;
+}
+
+.hero{
+text-align:center;
+padding:120px 20px;
+}
+
+.hero h1{
+font-size:48px;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:8px;
+background:#00c6ff;
+color:white;
+font-size:16px;
+cursor:pointer;
+margin:10px;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+.features{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+padding:20px;
+border-radius:12px;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.stats{
+display:flex;
+justify-content:space-around;
+margin-top:40px;
+}
+
+.stat{
+text-align:center;
+font-size:28px;
+}
+
+.login-box{
+max-width:350px;
+margin:auto;
+background:rgba(255,255,255,0.1);
+padding:30px;
+border-radius:12px;
+backdrop-filter:blur(10px);
+}
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+border-radius:6px;
+border:none;
+}
+
+.dashboard{
+display:flex;
+}
+
+.sidebar{
+width:200px;
+background:#111;
+height:100vh;
+padding:20px;
+}
+
+.sidebar div{
+margin:15px 0;
+cursor:pointer;
+}
+
+.content{
+flex:1;
+padding:40px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+}
+
+.cert-preview{
+background:white;
+color:black;
+padding:30px;
+border-radius:10px;
+margin-top:20px;
+}
+
+canvas{
+background:white;
+border-radius:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LANDING PAGE -->
+
+<section id="landing" class="active">
+
+<div class="hero">
+
+<h1>AI-Powered Secure Certificate Generation & Verification</h1>
+
+<p>Generate tamper-proof digital certificates with AI validation and QR authentication.</p>
+
+<button onclick="showPage('login')">Generate Certificate</button>
+
+<button onclick="showPage('verify')">Verify Certificate</button>
+
+</div>
+
+<div class="features">
+
+<div class="card">AI Fraud Detection</div>
+<div class="card">QR Code Authentication</div>
+<div class="card">Blockchain-style Hash ID</div>
+<div class="card">Instant Verification</div>
+<div class="card">Secure Cloud Storage</div>
+<div class="card">Smart Certificate Generator</div>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<div id="c1">0</div>
+Certificates Issued
+</div>
+
+<div class="stat">
+<div id="c2">0</div>
+Institutions
+</div>
+
+<div class="stat">
+<div id="c3">0</div>
+Verified
+</div>
+
+</div>
+
+</section>
+
+<!-- LOGIN PAGE -->
+
+<section id="login">
+
+<div class="login-box">
+
+<h2>Admin Login</h2>
+
+<input placeholder="Email">
+
+<input type="password" placeholder="Password">
+
+<button onclick="showPage('dashboard')">Login</button>
+
+</div>
+
+</section>
+
+<!-- DASHBOARD -->
+
+<section id="dashboard">
+
+<div class="dashboard">
+
+<div class="sidebar">
+
+<div onclick="showPage('dashboard')">Dashboard</div>
+<div onclick="showPage('generator')">Generate Certificate</div>
+<div onclick="showPage('analytics')">Analytics</div>
+<div onclick="showPage('verify')">Verification</div>
+
+</div>
+
+<div class="content">
+
+<h2>Dashboard</h2>
+
+<div class="grid">
+
+<div class="card">Total Certificates<br><h2>1200</h2></div>
+<div class="card">Verified<br><h2>980</h2></div>
+<div class="card">Pending<br><h2>50</h2></div>
+<div class="card">Institutions<br><h2>12</h2></div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- GENERATOR -->
+
+<section id="generator">
+
+<h2>Generate Certificate</h2>
+
+<input id="name" placeholder="Student Name">
+
+<input id="course" placeholder="Course Name">
+
+<input id="inst" placeholder="Institution Name">
+
+<input type="date" id="date">
+
+<button onclick="generate()">Generate Certificate</button>
+
+<div id="preview"></div>
+
+</section>
+
+<!-- VERIFY PAGE -->
+
+<section id="verify">
+
+<h2>Verify Certificate</h2>
+
+<input id="certid" placeholder="Enter Certificate ID">
+
+<button onclick="verify()">Verify</button>
+
+<div id="result"></div>
+
+</section>
+
+<!-- ANALYTICS -->
+
+<section id="analytics">
+
+<h2>Analytics</h2>
+
+<canvas id="chart" width="400" height="200"></canvas>
+
+</section>
+
+<script>
+
+function showPage(id){
+
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+
+document.getElementById(id).classList.add("active");
+
+}
+
+function generate(){
+
+let name=document.getElementById("name").value;
+let course=document.getElementById("course").value;
+let inst=document.getElementById("inst").value;
+let date=document.getElementById("date").value;
+
+let id="CERT"+Math.floor(Math.random()*100000);
+
+let html=
+
+`<div class="cert-preview">
+
+<h2>Certificate of Completion</h2>
+
+<p>This certifies that</p>
+
+<h1>${name}</h1>
+
+<p>has successfully completed</p>
+
+<h3>${course}</h3>
+
+<p>${inst}</p>
+
+<p>Date: ${date}</p>
+
+<p>ID: ${id}</p>
+
+<div id="qrcode"></div>
+
+<button onclick="window.print()">Download</button>
+
+</div>`;
+
+document.getElementById("preview").innerHTML=html;
+
+new QRCode(document.getElementById("qrcode"),id);
+
+localStorage.setItem(id,JSON.stringify({name,course,date,inst}));
+
+}
+
+function verify(){
+
+let id=document.getElementById("certid").value;
+
+let data=localStorage.getItem(id);
+
+if(data){
+
+let d=JSON.parse(data);
+
+document.getElementById("result").innerHTML=
+
+`<h3>Certificate Valid</h3>
+Student: ${d.name}<br>
+Course: ${d.course}<br>
+Date: ${d.date}<br>
+Institution: ${d.inst}`;
+
+}else{
+
+document.getElementById("result").innerHTML="<h3>Invalid Certificate</h3>";
+
+}
+
+}
+
+let chart=new Chart(document.getElementById("chart"),{
+
+type:'bar',
+
+data:{
+
+labels:["Jan","Feb","Mar","Apr","May","Jun"],
+
+datasets:[{
+
+label:"Certificates",
+
+data:[50,80,120,150,200,300]
+
+}]
+
+}
+
+});
+
+function counter(id,max){
+
+let i=0;
+
+let inter=setInterval(()=>{
+
+i++;
+
+document.getElementById(id).innerText=i;
+
+if(i>=max)clearInterval(inter);
+
+},20);
+
+}
+
+counter("c1",1200);
+counter("c2",40);
+counter("c3",980);
+
+</script>
+
+</body>
+</html>
